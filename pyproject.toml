@@ -30,8 +30,8 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/nhn1030/fastuator"
-Repository = "https://github.com/nhn1030/fastuator"
+Homepage = "https://github.com/fastuator/fastuator"
+Repository = "https://github.com/fastuator/fastuator"
 
 [tool.hatch.build.targets.wheel]
 packages = ["fastuator"]

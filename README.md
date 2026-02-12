@@ -1,7 +1,7 @@
 # Fastuator
 
-[![CI](https://github.com/nhn1030/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/nhn1030/fastuator/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/nhn1030/fastuator)
+[![CI](https://github.com/fastuator/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/fastuator/fastuator/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/fastuator/fastuator)
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
