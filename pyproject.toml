@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "fastuator"
-version = "0.1.0"
+version = "0.0.1"
 description = "Production-ready actuator endpoints for FastAPI (health, metrics, info)"
 readme = "README.md"
 license = {text = "MIT"}
@@ -22,6 +22,7 @@ dependencies = [
 dev = [
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
     "httpx>=0.25.0",
     "uvicorn[standard]>=0.32.0",
     "black>=24.0.0",
