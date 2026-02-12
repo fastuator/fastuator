@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/fastuator/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/fastuator/fastuator/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/fastuator/fastuator)
-[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Production-ready monitoring toolkit for FastAPI applications.  
