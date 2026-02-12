@@ -1,12 +1,23 @@
+<div align="center">
+
 # Fastuator
 
 [![CI](https://github.com/fastuator/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/fastuator/fastuator/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/fastuator/fastuator)
+[![PyPI](https://img.shields.io/pypi/v/fastuator.svg)](https://pypi.org/project/fastuator/)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Production-ready monitoring toolkit for FastAPI applications.  
-Kubernetes probes, Prometheus metrics, and health checks in one line.
+</div>
+
+<div align="center">
+  <img src="https://img.shields.io/github/stars/fastuator/fastuator?style=social" alt="GitHub stars">
+  <br><br>
+  
+  **Production-ready monitoring toolkit for FastAPI applications.**  
+  Kubernetes probes, Prometheus metrics, and health checks in **one line**.
+  
+</div>
 
 ## ✨ Features
 
@@ -42,6 +53,7 @@ Fastuator(app)  # That's it!
 | `GET /fastuator/readiness` | Kubernetes readiness probe (all dependencies) |
 | `GET /fastuator/metrics` | Prometheus-compatible metrics |
 | `GET /fastuator/info` | Application and system information |
+
 
 ## 📖 Usage
 
@@ -216,3 +228,11 @@ Inspired by [Spring Boot Actuator](https://docs.spring.io/spring-boot/docs/curre
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework for Python
 - [Prometheus](https://prometheus.io/) - Monitoring and alerting toolkit
 - [Kubernetes](https://kubernetes.io/) - Container orchestration platform
+
+<div align="center">
+  
+**⭐ Loved this library? Star us to support!**
+  
+[![Star History Chart](https://api.star-history.com/svg?repos=fastuator/fastuator)](https://star-history.com/#fastuator/fastuator&Date)
+
+</div>
