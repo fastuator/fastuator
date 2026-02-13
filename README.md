@@ -1,6 +1,8 @@
 <div align="center">
 
-# Fastuator
+<img width="1600" height="896" alt="fastuator" src="https://github.com/user-attachments/assets/4ef8e865-b49e-479e-ab09-78f14c6cdddc" />
+
+#
 
 [![CI](https://github.com/fastuator/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/fastuator/fastuator/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
