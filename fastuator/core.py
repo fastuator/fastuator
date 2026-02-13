@@ -18,7 +18,7 @@ from prometheus_client import Counter, Gauge, Histogram, make_asgi_app, REGISTRY
 import psutil
 
 
-def get_package_version() -> str:  #
+def get_package_version() -> str:
     """Get package version dynamically."""
     try:
         return importlib.metadata.version("fastuator")
