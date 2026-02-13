@@ -4,6 +4,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from fastuator import Fastuator
+import asyncio
 
 
 @pytest.fixture
@@ -14,6 +15,12 @@ def client():
     """
     app = FastAPI()
     Fastuator(app)
+    Fastuator(app)  # v0.1.0: duplicate prevention test
+
+    # Verify v0.1.0 duplicate prevention
+    assert len(app.user_middleware) == 1
+    assert hasattr(app.state, "_fastuator_metrics_middleware")
+
     return TestClient(app)
 
 
@@ -89,3 +96,54 @@ def exception_readiness_client():
     Fastuator(app, readiness_checks=[exception_check])
 
     return TestClient(app)
+
+
+def test_v010_duplicate_prevention():
+    """Test v0.1.0: No duplicate middleware registration."""
+    app = FastAPI()
+
+    Fastuator(app)  # First
+    count1 = len(app.user_middleware)
+
+    Fastuator(app)  # Second (skipped)
+    count2 = len(app.user_middleware)
+
+    assert count1 == count2
+    assert hasattr(app.state, "_fastuator_metrics_middleware")
+
+
+def test_v010_readable_check_names(client):
+    """Test v0.1.0: Health details show readable check names."""
+    response = client.get("/fastuator/health?show_details=true")
+    assert response.status_code == 200
+
+    components = response.json()["components"]
+    assert "cpu_health" in components
+    assert "check_0" not in components
+
+
+def test_v010_dynamic_version():
+    """Test v0.1.0: Dynamic package version."""
+    app = FastAPI()
+    Fastuator(app)
+    client = TestClient(app)
+
+    info = client.get("/fastuator/info").json()
+    version = info["build"]["version"]
+    assert version in ["dev", "0.1.0"]
+
+
+def test_v010_health_timeout():
+    """Test v0.1.0: 5s timeout protection."""
+    app = FastAPI()
+
+    async def slow_check():
+        await asyncio.sleep(10)
+        return {"status": "UP"}
+
+    Fastuator(app, health_checks=[slow_check])
+    client = TestClient(app)
+
+    response = client.get("/fastuator/health")
+    assert response.status_code == 200
+    assert response.json()["status"] == "DOWN"
