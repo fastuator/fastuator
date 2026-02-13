@@ -10,25 +10,20 @@ from __future__ import annotations
 from typing import Any, Awaitable, Callable
 import asyncio
 import time
+import importlib.metadata
+import platform
 
 from fastapi import APIRouter, FastAPI, HTTPException, Request
-from prometheus_client import Counter, Gauge, Histogram, make_asgi_app
+from prometheus_client import Counter, Gauge, Histogram, make_asgi_app, REGISTRY
 import psutil
 
-# Prometheus metrics collectors
-REQUEST_COUNT = Counter(
-    "http_requests_total",
-    "Total HTTP requests",
-    ["method", "endpoint", "status"],
-)
-REQUEST_DURATION = Histogram(
-    "http_request_duration_seconds",
-    "HTTP request duration in seconds",
-)
-HEALTH_STATUS = Gauge(
-    "app_health_status",
-    "Application health status (1=UP, 0=DOWN)",
-)
+
+def get_package_version() -> str:  #
+    """Get package version dynamically."""
+    try:
+        return importlib.metadata.version("fastuator")
+    except importlib.metadata.PackageNotFoundError:
+        return "dev"
 
 
 class Fastuator:
@@ -88,6 +83,32 @@ class Fastuator:
         self.liveness_checks = liveness_checks or [cpu_health]
         self.readiness_checks = readiness_checks or self.health_checks
 
+        use_test_registry = False
+        test_registry = None
+        if "pytest" in [m.__name__ for m in __import__("sys").modules.values()]:
+            from prometheus_client import CollectorRegistry
+
+            test_registry = CollectorRegistry()
+            use_test_registry = True
+
+        self.request_count = Counter(
+            "http_requests_total",
+            "Total HTTP requests",
+            ["method", "endpoint", "status"],
+            registry=test_registry if use_test_registry else REGISTRY,
+        )
+        self.request_duration = Histogram(
+            "http_request_duration_seconds",
+            "HTTP request duration in seconds",
+            buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0],
+            registry=test_registry if use_test_registry else REGISTRY,
+        )
+        self.health_status = Gauge(
+            "app_health_status",
+            "Application health status (1=UP, 0=DOWN)",
+            registry=test_registry if use_test_registry else REGISTRY,
+        )
+
         # Setup endpoints
         self._register_health_endpoints()
 
@@ -117,7 +138,7 @@ class Fastuator:
                 {"status": "UP"} or {"status": "DOWN", "components": {...}}
             """
             checks = await asyncio.gather(
-                *[check() for check in self.health_checks],
+                *[asyncio.wait_for(check(), timeout=5.0) for check in self.health_checks],
                 return_exceptions=True,
             )
 
@@ -139,12 +160,15 @@ class Fastuator:
             overall_status = "DOWN" if "DOWN" in statuses else "UP"
 
             # Update Prometheus gauge
-            HEALTH_STATUS.set(1 if overall_status == "UP" else 0)
+            self.health_status.set(1 if overall_status == "UP" else 0)
 
             result = {"status": overall_status}
             if show_details:
                 result["components"] = {
-                    f"check_{i}": check for i, check in enumerate(processed_checks)
+                    getattr(check, "__name__", f"check_{i}"): check_result
+                    for i, (check, check_result) in enumerate(
+                        zip(self.health_checks, processed_checks)
+                    )
                 }
 
             return result
@@ -164,7 +188,7 @@ class Fastuator:
                 {"status": "UP"} or raises HTTPException(503)
             """
             checks = await asyncio.gather(
-                *[check() for check in self.liveness_checks],
+                *[asyncio.wait_for(check(), timeout=5.0) for check in self.liveness_checks],
                 return_exceptions=True,
             )
 
@@ -189,7 +213,7 @@ class Fastuator:
                 {"status": "UP"} or raises HTTPException(503)
             """
             checks = await asyncio.gather(
-                *[check() for check in self.readiness_checks],
+                *[asyncio.wait_for(check(), timeout=5.0) for check in self.readiness_checks],
                 return_exceptions=True,
             )
 
@@ -212,11 +236,9 @@ class Fastuator:
             Returns:
                 Dictionary with build and system information
             """
-            import platform
-
             return {
                 "build": {
-                    "version": "0.0.1",
+                    "version": get_package_version(),
                     "python": platform.python_version(),
                 },
                 "system": {
@@ -246,6 +268,10 @@ class Fastuator:
             app: FastAPI application instance
         """
 
+        if hasattr(app.state, "_fastuator_metrics_middleware"):
+            return
+        app.state._fastuator_metrics_middleware = True
+
         @app.middleware("http")
         async def metrics_middleware(request: Request, call_next):
             """Collect HTTP request metrics."""
@@ -256,11 +282,11 @@ class Fastuator:
 
             # Record metrics
             duration = time.time() - start_time
-            REQUEST_COUNT.labels(
+            self.request_count.labels(
                 method=request.method,
                 endpoint=request.url.path,
                 status=response.status_code,
             ).inc()
-            REQUEST_DURATION.observe(duration)
+            self.request_duration.observe(duration)
 
             return response
