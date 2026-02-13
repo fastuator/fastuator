@@ -7,8 +7,8 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 [![Fastuator](https://img.shields.io/pypi/v/fastuator?style=for-the-badge&logo=python&logoColor=white)](https://pypi.org/project/fastuator/)
-<!--[![Downloads](https://img.shields.io/pypi/dm/fastuator?style=for-the-badge)](https://pypistats.org/packages/fastuator)-->
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=for-the-badge)](https://github.com/fastuator/fastuator)
+<!--[![Downloads](https://img.shields.io/pypi/dm/fastuator?style=for-the-badge)](https://pypistats.org/packages/fastuator)-->
 
 </div>
 
