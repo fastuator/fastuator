@@ -7,10 +7,10 @@
 [![CI](https://github.com/fastuator/fastuator/actions/workflows/test.yml/badge.svg)](https://github.com/fastuator/fastuator/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/fastuator?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/fastuator)
 
 [![Fastuator](https://img.shields.io/pypi/v/fastuator?style=for-the-badge&logo=python&logoColor=white)](https://pypi.org/project/fastuator/)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen?style=for-the-badge)](https://github.com/fastuator/fastuator)
-<!--[![Downloads](https://img.shields.io/pypi/dm/fastuator?style=for-the-badge)](https://pypistats.org/packages/fastuator)-->
 
 </div>
 
@@ -18,10 +18,12 @@
   <img src="https://img.shields.io/github/stars/fastuator/fastuator?style=social" alt="GitHub stars">
   <br><br>
   
+  
   **Production-ready monitoring toolkit for FastAPI applications.**  
   Kubernetes probes, Prometheus metrics, and health checks in **one line**.
   
 </div>
+
 
 ## ✨ Features
 
